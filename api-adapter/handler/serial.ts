@@ -1,25 +1,21 @@
-import { createMoistureReading } from '../util/db';
+import { createMoistureReading, createWatering, getMoistureReadings } from '../util/db';
+import { deserialize } from '../util/message';
+import MESSAGE_TYPE from '../constant/message-type';
 
 
 export default async (data: string) => {
-    const asObject: any = deserialize(data);
-    switch(asObject.type) {
-        case 'moisture_reading':
-            return createMoistureReading(asObject);
+    try {
+        console.log(data);
+        const asObject: any = deserialize(data);
+        switch (asObject.type) {
+            case MESSAGE_TYPE.MOISTURE_READING:
+                return await createMoistureReading(asObject);
+            case MESSAGE_TYPE.WATERING:
+                return await createWatering(asObject);
+            default:
+                console.error(`Unknown message type received: ${asObject.type}`);
+        }
+    } catch (e) {
+        console.error(`Error while processing serial message.`, e);
     }
-}
-
-const deserialize = (data: string) => {
-    const obj = {};
-    const split = data.split(';');
-    const type = split[0];
-    split.splice(0,1);
-    for (const element of split) {
-        const eleSplit = element.split(':');
-        // arduino sends this back and we dont want it
-        if (eleSplit[0] === '\r') continue;
-        obj[eleSplit[0]] = eleSplit[1];
-    }
-    obj['type'] = type;
-    return obj;
 }
