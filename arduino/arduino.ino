@@ -1,4 +1,4 @@
-#define TASK_INTERVAL_MS 30000
+#define TASK_INTERVAL_MS 3000
 #define WATERING_LENGTH_MS 5000
 
 #define MOISTURE_SENSOR_A0 A0
@@ -46,7 +46,7 @@ void setupWaterPumps() {
  */
 void loop () {
   doAllWateringTasks();
-  delay(30000);
+  delay(TASK_INTERVAL_MS);
 }
 
 void doAllWateringTasks() {
@@ -77,7 +77,7 @@ float getMoistureReading(int sensor) {
     Serial.print("sensor:");
     Serial.print(sensor);
     Serial.print(";");
-    Serial.print("sum:");
+    Serial.print("reading:");
     Serial.print(sum);
     Serial.println(";");
     
