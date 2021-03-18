@@ -35,8 +35,8 @@ void setupWaterPumps() {
 }
 
 void loop () {
-  Cron.create("* * * * *", doAllWateringTasks, true);
-  Cron.delay();
+  doAllWateringTasks();
+  delay(30000);
 }
 
 void doAllWateringTasks() {
