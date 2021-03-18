@@ -1,10 +1,11 @@
+#define TASK_INTERVAL_MS 30000
+#define WATERING_LENGTH_MS 5000
+
 #define MOISTURE_SENSOR_A0 A0
 #define MOISTURE_SENSOR_A1 A1
 
 #define WATER_PUMP_SENSOR_6 6
 #define WATER_PUMP_SENSOR_5 5
-
-// unused
 #define WATER_PUMP_SENSOR_4 4
 #define WATER_PUMP_SENSOR_3 3
 
@@ -15,8 +16,14 @@ const int WATER_SENSORS[] = {
   WATER_PUMP_SENSOR_6
 };
 
-const float MINIMUM_WETNESS = 550;
+// const float MINIMUM_WETNESS = 550;
 
+// triggers watering no matter what
+const float MINIMUM_WETNESS = 0;
+
+/**
+ * SETUP
+ */
 void setup() {
   Serial.begin(9600); // open serial port
   setupMoistureSensors();
@@ -34,6 +41,9 @@ void setupWaterPumps() {
   }
 }
 
+/**
+ * MAIN
+ */
 void loop () {
   doAllWateringTasks();
   delay(30000);
@@ -54,8 +64,6 @@ void doWateringTask(int moistureSensor, int pumpSensor) {
 }
 
 float getMoistureReading(int sensor) {
-    Serial.print("getting moisture reading for: ");
-    Serial.println(sensor);
     const int amtReadings = 100;
     float sum = 0;
     for (int i = 0; i < amtReadings; i++) {
@@ -63,8 +71,16 @@ float getMoistureReading(int sensor) {
       delay(5);
     }
     sum = sum / amtReadings;
-    Serial.println("sum");
-    Serial.println(sum);
+
+    // for api-adapter
+    Serial.print("moisture_reading;");
+    Serial.print("sensor:");
+    Serial.print(sensor);
+    Serial.print(";");
+    Serial.print("sum:");
+    Serial.print(sum);
+    Serial.println(";");
+    
     return sum;
 }
 
@@ -74,8 +90,16 @@ boolean isDry(float reading) {
 
 void waterPlant(int pumpSensor) {
     turnOnWaterPump(pumpSensor);
-    delay(5000);
+    delay(WATERING_LENGTH_MS);
     turnOffWaterPump(pumpSensor);
+    // for api-adapter
+    Serial.print("watering;");
+    Serial.print("sensor:");
+    Serial.print(pumpSensor);
+    Serial.print(";");
+    Serial.print("length:");
+    Serial.print(WATERING_LENGTH_MS);
+    Serial.println(";");
 }
 
 void turnOnWaterPump(int pumpSensor) {
