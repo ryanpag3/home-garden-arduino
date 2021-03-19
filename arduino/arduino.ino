@@ -9,6 +9,11 @@
 #define WATER_PUMP_SENSOR_4 4
 #define WATER_PUMP_SENSOR_3 3
 
+const byte DATA_MAX_SIZE = 32;
+char cmd[DATA_MAX_SIZE];
+int cmdIndex;
+char incomingByte;
+
 const int WATER_SENSORS[] = {
   WATER_PUMP_SENSOR_3, 
   WATER_PUMP_SENSOR_4,
@@ -28,6 +33,7 @@ void setup() {
   Serial.begin(9600); // open serial port
   setupMoistureSensors();
   setupWaterPumps();
+  cmdIndex = 0;
 }
 
 void setupMoistureSensors() {
@@ -45,8 +51,28 @@ void setupWaterPumps() {
  * MAIN
  */
 void loop () {
-  doAllWateringTasks();
-  delay(TASK_INTERVAL_MS);
+  if (incomingByte = Serial.available() > 0) {
+    char byteIn = Serial.read();
+    cmd[cmdIndex] = byteIn;
+    if (byteIn == '\n') {
+      // Serial.println("end of message found");
+      // done
+      cmd[cmdIndex] = '\0';
+      cmdIndex = 0;
+
+      String strCmd = String(cmd);
+      if (strcmp(cmd, "RUNTASKS") == 0) {
+         doAllWateringTasks();
+      } else if (strcmp(cmd, "WATERPLANT") == 0) {
+          waterPlant(WATER_PUMP_SENSOR_4);
+          waterPlant(WATER_PUMP_SENSOR_3);
+      } 
+    } else {
+        if (cmdIndex++ >= DATA_MAX_SIZE) {
+          cmdIndex = 0;
+        }
+    }
+  }
 }
 
 void doAllWateringTasks() {

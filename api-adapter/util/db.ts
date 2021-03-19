@@ -73,7 +73,7 @@ export async function getWaterings(amtTime: string) {
     const inMillis = shortSinceToSeconds(amtTime) * 1000;
     const startDate = new Date(new Date().getTime() - inMillis);
     const res = await pool.query(named(`
-        SELECT * FROM waterings
+        SELECT * FROM watering
             WHERE created_at between :startDate and now();
     `)({ startDate }));
     console.log(`found ${res.rows.length} waterings for ${amtTime} ago.`);

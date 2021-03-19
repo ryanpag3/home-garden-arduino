@@ -5,8 +5,9 @@ const Readline = require('@serialport/parser-readline');
 import serial from './handler/serial';
 import { startWebserver } from './server';
 import { setupDb } from './util/db';
+import './util/cronjobs';
 
-const port = new SerialPort('/dev/cu.usbmodem141301', { baudRate: 9600 });
+export const port = new SerialPort('/dev/cu.usbmodem141301', { baudRate: 9600 });
 const parser = port.pipe(new Readline({ delimiter: '\n'}));
 
 async function main() {
