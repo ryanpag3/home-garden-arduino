@@ -7,7 +7,7 @@ import { startWebserver } from './server';
 import { setupDb } from './util/db';
 import './util/cronjobs';
 
-export const port = new SerialPort('/dev/cu.usbmodem141301', { baudRate: 9600 });
+export const port = new SerialPort('/dev/cu.usbmodem144101', { baudRate: 9600 });
 const parser = port.pipe(new Readline({ delimiter: '\n'}));
 
 async function main() {
