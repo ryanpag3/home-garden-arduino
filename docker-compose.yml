@@ -3,11 +3,13 @@ services:
   api-adapter:
     build:
       context: ./api-adapter
+      network: host
     ports:
       - 3000:3000
   web:
     build:
       context: ./web
+      network: host
     ports:
       - 80:80
 
