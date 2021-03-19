@@ -1,6 +1,6 @@
 [
     {
-        "cron": "0 * * * *",
+        "cron": "* * * * *",
         "taskMessage": "RUNTASKS"
     }
 ]
