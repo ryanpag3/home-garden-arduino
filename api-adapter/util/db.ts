@@ -63,7 +63,8 @@ export async function getMoistureReadings(amtTime: string) {
     const startDate = new Date(new Date().getTime() - inMillis);
     const res = await pool.query(named(`
         SELECT * FROM moisture_reading
-            WHERE created_at between :startDate and now();
+            WHERE created_at between :startDate and now()
+            ORDER BY created_at ASC;
     `)({ startDate }));
     console.log(`found ${res.rows.length} moisture readings for ${amtTime} ago.`);
     return res;

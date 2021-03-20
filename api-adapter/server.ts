@@ -16,6 +16,10 @@ app.get('/moisture_reading', async (req: express.Request, res: express.Response)
             return res.send(`timeFrom is required.`);
         }
         const queryResult = await getMoistureReadings(timeFrom);
+        queryResult.rows = queryResult.rows.map((r) => {
+            r.created_at = new Date(r.created_at);
+            return r;
+        })
         res.send(queryResult.rows);
     } catch (e) {
         console.log(e);

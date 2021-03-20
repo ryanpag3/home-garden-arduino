@@ -5,8 +5,14 @@ import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, X
 import styled from 'styled-components';
 import axios from '../util/axios';
 
+const colors = [
+    "blue",
+    "green"
+]
+
 const BumpChart = (props: any) => {
     const [moistureLines, setMoistureLines] = useState([]);
+    const [data, setData] = useState([]);
     const [{ data: moistureData }] = useAxios({
         url: '/moisture_reading',
         params: {
@@ -17,8 +23,14 @@ const BumpChart = (props: any) => {
     useEffect(() => {
         if (!moistureData)
             return;
+        const mapped: any[] = [];
         // @ts-ignore
-        setMoistureLines(getLineIds(moistureData))
+        setMoistureLines(getLineIds(moistureData));
+        moistureData.forEach((d: any) => {
+            d['reading_' + d.sensor] = d.reading;
+            mapped.push(d);
+        })
+        setData(mapped as any);
     }, [ moistureData ]);
 
     function getLineIds(data: any[]) {
@@ -31,7 +43,7 @@ const BumpChart = (props: any) => {
     }
 
     function formatXAxis(tickItem: any) {
-        return moment(tickItem).format('MM-DD-YYYY HH:mm:ss');
+        return moment(tickItem).format('MM-DD-YYYY hh:mm');
     }
 
     async function submitWateringRequest() {
@@ -45,16 +57,16 @@ const BumpChart = (props: any) => {
     return (
         <Container>
             <Title>Moisture</Title>
-            <ResponsiveContainer width="90%" height="50%">
-                <LineChart>
+            <ResponsiveContainer width="80%" height="50%">
+                <LineChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="created_at" tickFormatter={formatXAxis} domain={['auto', 'auto']}/>
+                    <XAxis dataKey="created_at" tickFormatter={formatXAxis}/>
                     <YAxis dataKey="reading" type="number" domain={[300, 600]}/>
                     <Tooltip/>
                     <Legend/>
                     {
-                        moistureLines.map(lineId => {
-                            return <Line key={lineId} name={lineId} dataKey="reading" data={moistureData.filter((d: any) => d.sensor === lineId)}/>
+                        moistureLines.map((lineId, i) => {
+                            return <Line type="monotone" connectNulls={true} stroke={colors[i]} key={lineId} name={lineId} dataKey={"reading_" + lineId}/>
                         })
                     }
                 </LineChart>
