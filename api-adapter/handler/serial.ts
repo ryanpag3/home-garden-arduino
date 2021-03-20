@@ -1,4 +1,4 @@
-import { createMoistureReading, createWatering, getMoistureReadings } from '../util/db';
+import { createMoistureReading, createWatering } from '../util/db';
 import { deserialize } from '../util/message';
 import MESSAGE_TYPE from '../constant/message-type';
 

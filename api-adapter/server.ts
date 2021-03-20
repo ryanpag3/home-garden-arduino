@@ -1,7 +1,8 @@
 import express = require('express');
 import cors = require('cors');
-import { getMoistureReadings, getWaterings } from './util/db';
+import { createMoistureReading, createWatering, getMoistureReadings, getWaterings } from './util/db';
 import { port } from '.';
+import { genRand } from './util/number';
 const app = express();
 const serverPort = process.env.ADAPTER_PORT || 3000;
 
@@ -59,6 +60,21 @@ app.post('/water_plant', async (req: express.Request, res: express.Response) => 
         console.log('message written');
     })
     res.send(200);
+});
+
+app.post('/generate_data', async (req: express.Request, res: express.Response) => {
+    const amt = req.params.amt || 10;
+    for (let i = 0; i < amt; i++) {
+        await createMoistureReading({
+            sensor: genRand(14, 15, 0), 
+            reading: genRand(200, 600, 2)
+        });
+        await createWatering({
+            sensor: genRand(14, 15, 0),
+            length: 5000
+        });
+    }
+    res.sendStatus(200);
 });
 
 export const startWebserver = async () => {
