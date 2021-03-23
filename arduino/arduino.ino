@@ -21,10 +21,10 @@ const int WATER_SENSORS[] = {
   WATER_PUMP_SENSOR_6
 };
 
-// const float MINIMUM_WETNESS = 550;
+const float MINIMUM_WETNESS = 550;
 
 // triggers watering no matter what
-const float MINIMUM_WETNESS = 0;
+// const float MINIMUM_WETNESS = 0;
 
 /**
  * SETUP
