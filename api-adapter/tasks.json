@@ -2,5 +2,9 @@
     {
         "cron": "* * * * *",
         "taskMessage": "RUNTASKS"
+    },
+    {
+        "cron": "0 4 * * *",
+        "taskMessage": "WATERPLANT"
     }
 ]
