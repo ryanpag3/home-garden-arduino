@@ -81,12 +81,7 @@ void doAllWateringTasks() {
 }
 
 void doWateringTask(int moistureSensor, int pumpSensor) {
-    float reading = getMoistureReading(moistureSensor);
-    
-    if (!isDry(reading))
-      return;
-
-    waterPlant(pumpSensor);
+    getMoistureReading(moistureSensor);
 }
 
 float getMoistureReading(int sensor) {
